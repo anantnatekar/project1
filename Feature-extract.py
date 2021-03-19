@@ -45,7 +45,7 @@ for token in wordfreq:
     wordfreq[token] = feature_id
     feature_id += 1
 
-#define the class dictionary
+#define the class dictionary for each folder
 class_dict = {"comp.graphics":"0", "comp.os.ms-windows.misc":"0", "comp.sys.ibm.pc.hardware":"0", "comp.sys.mac.hardware":"0", "comp.windows.x":"0",
             "rec.autos":"1", "rec.motorcycles":"1", "rec.sport.baseball":"1", "rec.sport.hockey":"1", 
             "sci.crypt":"2", "sci.electronics":"2", "sci.med":"2", "sci.space":"2",
@@ -53,6 +53,8 @@ class_dict = {"comp.graphics":"0", "comp.os.ms-windows.misc":"0", "comp.sys.ibm.
             "talk.politics.misc":"4", "talk.politics.guns":"4", "talk.politics.mideast":"4",
             "talk.religion.misc":"5", "alt.atheism":"5", "soc.religion.christian":"5"}
 
+#one row per document
+#<class_label> <feature_id>:<feature_value> 
 trainingdatafile = {}
 fid = {}
 #generate the training data set
