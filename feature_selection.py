@@ -24,46 +24,33 @@ targets = iris['target']
 
 X = feature_vectors
 y = targets
-#clf = MultinomialNB()
+X_new1 = SelectKBest(chi2, k=2).fit_transform(X, y)
+X_new2 = SelectKBest(mutual_info_classif, k=2).fit_transform(X, y)
+
+##################################################################
+# Different classifiers
+##################################################################
+
+clf = MultinomialNB()
 #clf = BernoulliNB()
-clf = KNeighborsClassifier()
+#clf = KNeighborsClassifier()
 #clf = SVC()
 
-scores = cross_val_score(clf, feature_vectors, targets, cv=5, scoring='f1_macro')
-print(scores)
-X_new1 = SelectKBest(chi2, k=3).fit_transform(X, y)
-X_new2 = SelectKBest(mutual_info_classif, k=3).fit_transform(X, y)
+#f1 macro for chi2
+feature_vectors = X_new1
+scores_chi2 = cross_val_score(clf, feature_vectors, targets, cv=5, scoring='f1_macro')
+print("%s (f1 macro) Accuracy: %0.2f (+/- %0.2f)" % (clf,scores_chi2.mean(),scores_chi2.std() * 2))
 
-print (X_new1.shape)
-print (X_new2.shape)
+#f1 macro for mutual_info_classif
+feature_vectors = X_new2
+scores_mic = cross_val_score(clf, feature_vectors, targets, cv=5, scoring='f1_macro')
+print("%s (f1 macro) Accuracy: %0.2f (+/- %0.2f)" % (clf,scores_mic.mean(),scores_mic.std() * 2))
 
-plt.title("Feature selection", fontsize=15)
-plt.plot(scores, color='b', linestyle='-', linewidth=2)
+plt.title(clf, fontsize=15)
+plt.plot(scores_chi2, color='b', linestyle='-', linewidth=2, label = "Chi-squared distribution")
+plt.plot(scores_mic, color='g', linestyle='-', linewidth=2, label = "Mutual info classifier")
 plt.xlabel("Number of Clusters",fontsize=13)
 plt.ylabel("F1 Scores",fontsize=13)
-#plt.legend(loc = 1)
+plt.legend(loc = 1)
 #plt.show(block=False)
 plt.show()
-
-# load data
-'''
-filename = '.csv'
-names = [names]
-dataframe = read_csv(filename, names=names)
-array = dataframe.values
-
-X = array[:,0:8]
-Y = array[:,8]
-
-# feature extraction
-test = SelectKBest(score_func=f_classif, k=4)
-fit = test.fit(X, Y)
-
-# summarize scores
-set_printoptions(precision=3)
-print(fit.scores_)
-features = fit.transform(X)
-
-# summarize selected features
-print(features[0:5,:])
-'''
